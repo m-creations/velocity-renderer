@@ -1,0 +1,16 @@
+$HOME: $envVars['HOME']
+==================================
+ Environment Variables
+==================================  
+#foreach( $ev in $envVars.keySet() )
+  $ev = $envVars[$ev]
+#end
+==================================
+#if($additionalParams)
+==================================
+ Test Additional Parameters
+==================================
+#foreach( $param in $additionalParams )
+  $param
+#end
+#end
