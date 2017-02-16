@@ -2,7 +2,6 @@ package com.mcreations.renderer.velocity;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,9 +24,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +35,10 @@ import org.slf4j.LoggerFactory;
 public class VelocityRenderer {
 	private static final Logger LOG = LoggerFactory.getLogger(VelocityRenderer.class);
 
-	private static final String[][] OPTIONS = {
+	public static final String[][] OPTIONS = {
 	      { "s", "src", "src-path", "Source path for velocity template files" },
 	      { "f", "files", "files-wildcard", "Velocity template file names pattern, by example: *.vm" },
-	      { "d", "dst", "dst-path", "Destination path for rendered velocity template files" }
+	      { "d", "dest", "destination-path", "Destination path for rendered velocity template files" }
 	};
 
 	private static final String APPLICATION_NAME = "VelocityRenderer";
@@ -74,7 +70,7 @@ public class VelocityRenderer {
 			for(String[] option : OPTIONS) {
 				if(!line.hasOption(option[2])) {
 					formatter.printHelp(APPLICATION_NAME, options);
-					System.exit(0);
+					System.exit(-1);
 				}
 			}
 
@@ -86,27 +82,28 @@ public class VelocityRenderer {
 		}
 
 		/*
-		 * Finding velocity template files
+		 * Logging application arguments
 		 */
-		System.out.println(sourcePath);
-		System.out.println(destPath);
-		System.out.println(filePattern);
-		velocityRenderer.render(sourcePath, destPath, filePattern, null);
+		LOG.info("sourcePath=" + sourcePath);
+		LOG.info("destPath=" + destPath);
+		LOG.info("filePattern=" + filePattern);
+		try {
+			velocityRenderer.render(sourcePath, destPath, filePattern, null);
+		} catch(Exception e) {
+			LOG.error("Rendering velocity templats failed: ", e);
+			System.exit(-2);
+		}
 	}
 
-	public void render(String sourcePath, String destPath, String filePattern, Map<String, Object> additionalContextParameters) {
+	public void render(String sourcePath, String destPath, String filePattern, Map<String, Object> additionalContextParameters) throws Exception {
 		List<String> foundFiles = new ArrayList<String>();
-		try {
-			final String filePatternLocal = filePattern;
-			Stream<Path> foundStream = Files.find(Paths.get(sourcePath),
-			      Integer.MAX_VALUE, (path, basicFileAttributes) -> path.toFile().getName().matches(filePatternLocal));
-			foundFiles = foundStream
-			      .sorted()
-			      .map(String::valueOf)
-			      .collect(Collectors.toList());
-		} catch(IOException e) {
-			LOG.error(e.getMessage(), e);
-		}
+		final String filePatternLocal = filePattern;
+		Stream<Path> foundStream = Files.find(Paths.get(sourcePath),
+		      Integer.MAX_VALUE, (path, basicFileAttributes) -> path.toFile().getName().matches(filePatternLocal));
+		foundFiles = foundStream
+		      .sorted()
+		      .map(String::valueOf)
+		      .collect(Collectors.toList());
 
 		/*
 		 * Velocity Engine init
@@ -130,27 +127,17 @@ public class VelocityRenderer {
 		/*
 		 * Parsing templattes and writing in destination
 		 */
-		try {
-			for(String foundFile : foundFiles) {
+		for(String foundFile : foundFiles) {
 
-				Template t = ve.getTemplate(foundFile);
-				File destFile = Paths.get(destPath, FilenameUtils.getBaseName(foundFile)).toFile();
-				FileWriter writer = new FileWriter(destFile, false);
-				// StringWriter writer = new StringWriter();
-				t.merge(context, writer);
-				writer.flush();
-				writer.close();
-				LOG.info(destFile.getName());
-				LOG.info(FileUtils.readFileToString(destFile, StandardCharsets.UTF_8));
-			}
-		} catch(ResourceNotFoundException e) {
-			LOG.error(e.getMessage(), e);
-		} catch(ParseErrorException e) {
-			LOG.error(e.getMessage(), e);
-		} catch(MethodInvocationException e) {
-			LOG.error(e.getMessage(), e);
-		} catch(IOException e) {
-			LOG.error(e.getMessage(), e);
+			Template t = ve.getTemplate(foundFile);
+			File destFile = Paths.get(destPath, FilenameUtils.getBaseName(foundFile)).toFile();
+			FileWriter writer = new FileWriter(destFile, false);
+			// StringWriter writer = new StringWriter();
+			t.merge(context, writer);
+			writer.flush();
+			writer.close();
+			LOG.info("Rendered velocity template file saved here: " + destFile.getAbsolutePath());
+			LOG.info("\n" + FileUtils.readFileToString(destFile, StandardCharsets.UTF_8));
 		}
 	}
 

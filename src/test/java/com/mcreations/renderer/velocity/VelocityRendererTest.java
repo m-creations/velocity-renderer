@@ -24,7 +24,7 @@ public class VelocityRendererTest {
 	}
 
 	@Test
-	public void testRender() {
+	public void testRender() throws Exception {
 		File destFile = Paths.get("/tmp/sample.test").toFile();
 		if(destFile.exists())
 			destFile.delete();
