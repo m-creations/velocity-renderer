@@ -11,7 +11,7 @@ You can run it with following command inside the root of checked out folder of p
 $JAVA_HOME/bin/java \
 -Dfile.encoding=UTF-8 \
 -jar ~/.m2/repository/com/mcreations/renderer/velocity-renderer/1.0-SNAPSHOT/velocity-renderer-1.0-SNAPSHOT-jar-with-dependencies.jar \
--s ./src -f .*.vm -d /tmp/
+-s ./src/test/resources -f .*.vm -d /tmp/
 ```
 After that you can see the rendred file here /tmp/sample.test:
 ```

@@ -24,6 +24,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,15 +105,18 @@ public class VelocityRenderer {
 		      Integer.MAX_VALUE, (path, basicFileAttributes) -> path.toFile().getName().matches(filePatternLocal));
 		foundFiles = foundStream
 		      .sorted()
-		      .map(String::valueOf)
+		      .map(f -> f.getFileName().toString())
 		      .collect(Collectors.toList());
-
 		/*
 		 * Velocity Engine init
 		 */
 		VelocityEngine ve = new VelocityEngine();
-		// ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-		// ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "file,classpath");
+		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		ve.setProperty("class.resource.loader.class", ClasspathResourceLoader.class.getName());
+		ve.setProperty("file.resource.loader.class", FileResourceLoader.class.getName());
+		ve.setProperty("input.encoding", "UTF-8");
+		ve.setProperty("file.resource.loader.path", Paths.get(sourcePath).toString());
 		ve.setProperty("runtime.log.logsystem.log4j.logger", VelocityRenderer.class.getName());
 		ve.init();
 
