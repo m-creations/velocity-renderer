@@ -1,14 +1,75 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>com.mcreations.renderer</groupId>
+
 	<artifactId>velocity-renderer</artifactId>
 	<packaging>jar</packaging>
+
 	<version>1.0-SNAPSHOT</version>
+
 	<name>velocity-renderer</name>
-	<url>http://maven.apache.org</url>
+
+	<description>A standalone renderer for the Apache Velocity template engine.</description>
+
+	<url>https://github.com/m-creations/velocity-renderer</url>
+
+	<properties>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Don't we want to allow people who are still on Java 7 to use the lib unmodified ? -->
+		<compiler.sourceLevel>1.8</compiler.sourceLevel>
+		<compiler.targetLevel>1.8</compiler.targetLevel>
+
+	</properties>
+
+	<inceptionYear>2017</inceptionYear>
+	<contributors>
+		<contributor>
+			<name>Reza Rahimi</name>
+		</contributor>
+	</contributors>
+	<licenses>
+		<license>
+			<name>Apache License v 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Reza Rahimi</name>
+			<email>rahimi@m-creations.com</email>
+			<organization>m-creations gmbh</organization>
+			<organizationUrl>http://www.m-creations.com</organizationUrl>
+		</developer>
+	</developers>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+	<issueManagement>
+		<url>https://github.com/m-creations/velocity-renderer/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	<scm>
+		<url>https://github.com/m-creations/velocity-renderer</url>
+		<connection>scm:git:git@github.com:m-creations/velocity-renderer.git</connection>
+		<developerConnection>scm:git:git@github.com:m-creations/velocity-renderer.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -48,7 +109,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<!-- MainClass in mainfest make a executable jar -->
+					<!-- MainClass in manifest for an executable jar -->
 					<archive>
 						<manifest>
 							<mainClass>com.mcreations.renderer.velocity.VelocityRenderer</mainClass>

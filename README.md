@@ -1,23 +1,34 @@
 Velocity Renderer
 =================
 
+## Introduction
+
+We needed a simple tool which would allow us to replace values of
+environment variables in files and would work as a Java library and as
+a command line tool.
+
 ## How to use
-After checkout and installing it with maven:
+
+After checkout, build it with maven:
+
 ```
 mvn clean install
 ```  
-You can run it with following command inside the root of checked out folder of project:
+
+You can run it with following command inside the project root folder:
+
 ```
-$JAVA_HOME/bin/java \
--Dfile.encoding=UTF-8 \
--jar ~/.m2/repository/com/mcreations/renderer/velocity-renderer/1.0-SNAPSHOT/velocity-renderer-1.0-SNAPSHOT-jar-with-dependencies.jar \
--s ./src/test/resources -f .*.vm -d /tmp/
+java -jar target/velocity-renderer-jar-with-dependencies.jar -s ./src/test/resources -f .*.vm -d ./target
 ```
-After that you can see the rendred file here /tmp/sample.test:
+
+After that you can see the rendered file at `target/sample.test`:
+
 ```
-cat /tmp/sample.test
+cat target/sample.test
 ``` 
-This file is the rendered version of src/test/resources/sample.test.vm which it is in the source of project:
+
+To see the template, from which `sample.test` was generated:
+
 ```
 cat src/test/resources/sample.test.vm
 ```
