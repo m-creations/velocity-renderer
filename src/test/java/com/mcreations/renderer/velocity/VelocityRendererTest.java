@@ -25,12 +25,12 @@ public class VelocityRendererTest {
 
 	@Test
 	public void testRender() throws Exception {
-		File destFile = Paths.get("/tmp/sample.test").toFile();
-		if(destFile.exists())
+		File destFile = Paths.get("./target/sample.test").toFile();
+		if (destFile.exists())
 			destFile.delete();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("additionalParams", Arrays.asList(new String[] { "Table1", "Table2" }));
-		renderer.render("./src/", "/tmp/", ".*\\.vm", params);
-		Assert.assertTrue("Rendered file does not find", destFile.exists());
+		renderer.render("./src/", "./target/", ".*\\.vm", params);
+		Assert.assertTrue("Cannot find the rendered file", destFile.exists());
 	}
 }
