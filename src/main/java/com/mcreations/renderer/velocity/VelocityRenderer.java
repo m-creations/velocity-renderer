@@ -21,14 +21,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.apache.velocity.runtime.resource.loader.FileResourceLoader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class VelocityRenderer {
-	private static final Logger LOG = LoggerFactory.getLogger(VelocityRenderer.class);
+	private static final Logger LOG = LogManager.getLogger(VelocityRenderer.class);
 
 	public static final String[][] OPTIONS = {
 	      { "s", "src", "src-path", "Source path for velocity template files" },
